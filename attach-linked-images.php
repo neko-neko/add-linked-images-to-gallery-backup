@@ -54,8 +54,14 @@ function externimg_find_imgs ($post_id) {
         if ($l=='custtag') {
           add_post_meta($post_id, $k, $imgs[$i], false);
         } else {
+          $count = 0;
           $trans = preg_quote($imgs[$i], "/");
           $content = preg_replace('/(<img[^>]* src=[\'"]?)('.$trans.')/', '$1'.$imgpath, $content);
+          $content = preg_replace('/(<a[^>]* href=[\'"]?)('.$trans.')/',  '$1'.$imgpath, $content, -1, $count);
+          if ($count == 0) {
+            $replaced_trans = str_replace('\-s', '', $trans);
+            $content = preg_replace('/(<a[^>]* href=[\'"]?)('.$replaced_trans.')/',  '$1'.$imgpath, $content);
+          }
           $replaced = true;
         }
         $processed[] = $imgs[i];
